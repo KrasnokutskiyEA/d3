@@ -1,6 +1,7 @@
 <script>
 import {
   select,
+  selectAll,
   arc,
   scaleLinear,
   scaleBand,
@@ -118,15 +119,15 @@ export default {
         .attr('x', d => this.x(d.name))
         .attr('y', d => this.y(d.orders))
 
+      // call axes
+      select('.xAxisGroup').call(this.xAxis)
+      select('.yAxisGroup').call(this.yAxis)
+
       // styling axes
       select('.xAxisGroup').selectAll('text')
         .attr('transform', 'rotate(-40)')
         .attr('text-anchor', 'end')
         .attr('fill', 'orange')
-
-      // call axes
-      select('.xAxisGroup').call(this.xAxis)
-      select('.yAxisGroup').call(this.yAxis)
     }
   }
 }
