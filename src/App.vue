@@ -1,19 +1,19 @@
 <script>
 
-import Figure from './components/Figure.vue'
+import Chart from './components/Chart.vue'
 
 export default {
   name: 'App',
 
   components: {
-    Figure
+    Chart
   }
 }
 </script>
 
 <template>
   <div id='app'>
-    <Figure />
+    <Chart />
   </div>
 </template>
 
