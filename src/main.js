@@ -4,6 +4,9 @@ import router from './router'
 import store from './store'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import vuetify from './plugins/vuetify'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
+import 'typeface-roboto/index.css'
 
 Vue.config.productionTip = false
 
@@ -23,5 +26,6 @@ export default firebase.firestore()
 new Vue({
   router,
   store,
+  vuetify,
   render: h => h(App)
 }).$mount('#app')

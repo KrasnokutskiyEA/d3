@@ -4,15 +4,14 @@ module.exports = {
     node: true
   },
   'extends': [
-    'plugin:vue/essential',
+    'plugin:vue/recommended',
     '@vue/standard'
   ],
   rules: {
-    'no-console': 'off',
-    'no-debugger': 'off',
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'vue/html-quotes': ['error', 'single'],
     'vue/singleline-html-element-content-newline': 'off',
-    'no-unused-vars': 'off',
     semi: [
       'error',
       'never'

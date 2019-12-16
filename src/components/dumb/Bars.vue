@@ -1,16 +1,15 @@
 <script>
 import {
   select,
-  selectAll,
-  arc,
+  // selectAll,
   scaleLinear,
   scaleBand,
-  min,
+  // min,
   max,
-  extent,
+  // extent,
   axisBottom,
   axisLeft,
-  interval,
+  // interval,
   transition,
   interpolate
 } from 'd3'
@@ -18,14 +17,14 @@ import {
 export default {
   name: 'Bars',
 
+  props: {
+    input: { type: Array, required: true }
+  },
+
   data () {
     return {
       margin: { top: 20, right: 20, bottom: 100, left: 100 }
     }
-  },
-
-  props: {
-    input: { type: Array, required: true }
   },
 
   computed: {
@@ -97,11 +96,13 @@ export default {
         .attr('height', this.graphHeight)
         .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`)
 
-      const xAxisGroup = graph.append('g')
+      // draw xAxisGroup
+      graph.append('g')
         .attr('class', 'xAxisGroup')
         .attr('transform', `translate(0, ${this.graphHeight})`)
 
-      const yAxisGroup = graph.append('g')
+      // draw yAxisGroup
+      graph.append('g')
         .attr('class', 'yAxisGroup')
     },
 

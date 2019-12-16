@@ -1,24 +1,38 @@
 <script>
-
-import Chart from './components/Chart.vue'
+// import { mapActions, mapGetters } from 'vuex'
+import Navigation from './components/Navigation.vue'
 
 export default {
   name: 'App',
 
   components: {
-    Chart
+    Navigation
   }
 }
 </script>
 
 <template>
-  <div id='app'>
-    <Chart />
-  </div>
+  <v-app style='background: #ffffff'>
+    <Navigation />
+    <v-content>
+      <v-container pa-0 fluid grid-list-md>
+        <transition name='fade'>
+          <router-view />
+        </transition>
+      </v-container>
+    </v-content>
+  </v-app>
 </template>
 
-<style lang="scss">
-body {
-  margin: 0
+<style lang='scss'>
+.fade-enter-active, .fade-leave-active {
+  transition-property: opacity;
+  transition-duration: 0.1s;
+}
+.fade-enter-active {
+  transition-delay: 0.1s;
+}
+.fade-enter, .fade-leave-active {
+  opacity: 0
 }
 </style>

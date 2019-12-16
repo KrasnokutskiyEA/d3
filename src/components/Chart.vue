@@ -58,6 +58,6 @@ export default {
 <template>
   <div>
     <div v-if='!init'>Initializing...</div>
-    <Bars v-else :input='this.recievedData' />
+    <Bars v-else :input='recievedData' />
   </div>
 </template>
