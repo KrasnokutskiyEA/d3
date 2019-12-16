@@ -10,7 +10,9 @@ import {
   extent,
   axisBottom,
   axisLeft,
-  interval
+  interval,
+  transition,
+  interpolate
 } from 'd3'
 
 export default {
@@ -73,6 +75,17 @@ export default {
   },
 
   methods: {
+    widthTween (d) {
+      // define interpolation
+      // d3 interpolate returns a function which we call - i
+      let i = interpolate(0, this.x.bandwidth())
+      // return a function which takes in a time ticker - t
+      return function (t) {
+        // return the value from passing thr ticker into interpolation
+        return i(t)
+      }
+    },
+
     drawBars () {
       const svg = select('.canvas').append('svg')
         .attr('width', 600)
@@ -93,6 +106,9 @@ export default {
     },
 
     updateBars (data) {
+      // 0 - define transition
+      const t = transition().duration(1500)
+
       // 1 - updating scale domains
       this.y.domain([0, max(this.input, d => d.orders)]) // что подаем на вход
       this.x.domain(this.input.map(item => item.name)) // что подаем на вход
@@ -106,18 +122,21 @@ export default {
       // 4 - update current shapes in DOM
       rects
         .attr('width', this.x.bandwidth)
-        .attr('height', d => this.graphHeight - this.y(d.orders))
         .attr('fill', d => 'orange')
         .attr('x', d => this.x(d.name))
-        .attr('y', d => this.y(d.orders))
 
       // 5 - append enter selection to the DOM
       rects.enter().append('rect')
         .attr('width', this.x.bandwidth)
-        .attr('height', d => this.graphHeight - this.y(d.orders))
+        .attr('height', 0)
         .attr('fill', d => 'orange')
         .attr('x', d => this.x(d.name))
+        .attr('y', this.graphHeight)
+        .merge(rects)
+        .transition(t)
+        .attrTween('width', this.widthTween)
         .attr('y', d => this.y(d.orders))
+        .attr('height', d => this.graphHeight - this.y(d.orders))
 
       // call axes
       select('.xAxisGroup').call(this.xAxis)
