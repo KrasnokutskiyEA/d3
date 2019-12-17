@@ -8,7 +8,7 @@ export default {
     return {
       visible: true,
       items: [
-        { title: 'Hello', icon: 'build', addr: '' },
+        { title: 'Hello', icon: 'build', addr: 'home' },
         { title: 'Bars', icon: 'build', addr: 'bars' },
         { title: 'Pie', icon: 'build', addr: 'pie' }
       ]

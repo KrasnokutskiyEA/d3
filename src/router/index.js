@@ -8,8 +8,8 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
-      name: 'hello',
+      path: '/home',
+      name: 'home',
       component: () => import('../components/HelloWorld.vue')
     },
     {

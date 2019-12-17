@@ -1,15 +1,11 @@
 <script>
 import {
   select,
-  // selectAll,
   scaleLinear,
   scaleBand,
-  // min,
   max,
-  // extent,
   axisBottom,
   axisLeft,
-  // interval,
   transition,
   interpolate
 } from 'd3'
