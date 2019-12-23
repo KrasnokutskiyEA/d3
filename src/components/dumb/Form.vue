@@ -27,7 +27,7 @@ export default {
 </script>
 
 <template>
-  <v-card :max-width='500' class='ml-10 mt-10 pa-10'>
+  <v-card :width='400' :height='300' class='ml-10 mt-10 pa-10'>
     <v-text-field
       v-model='itemName'
       label='Item name'

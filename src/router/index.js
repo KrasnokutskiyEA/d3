@@ -20,7 +20,7 @@ const router = new VueRouter({
     {
       path: '/pie',
       name: 'pie',
-      component: () => import('../components/Pie.vue')
+      component: () => import('../components/PieChart.vue')
     }
   ]
 })
