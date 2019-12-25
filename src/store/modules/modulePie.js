@@ -17,9 +17,15 @@ const modulePie = {
   mutations: {
     SET_RECIEVED_DATA_PIE (state, data) {
       Vue.set(state, 'recievedDataPie', data)
+      // state.recievedDataPie = [ ...data ]
     },
     SET_INIT_PIE (state) {
       Vue.set(state, 'initPie', true)
+    },
+
+    RESET_INIT_PIE (state) {
+      Vue.set(state, 'initPie', false)
+      state.recievedDataPie = []
     }
   },
 
@@ -27,11 +33,14 @@ const modulePie = {
     addItem: async ({ commit, getters }, [itemName, itemCost]) => {
       await addItem([itemName, itemCost])
     },
-    getDataPie: async ({ commit, getters }) => {
-      await getDataPie()
+    getDataPie: ({ commit, getters }, res) => {
+      return getDataPie(res)
     },
     setInitPie: ({ commit, getters }) => {
       commit('SET_INIT_PIE')
+    },
+    resetInitPie: ({ commit, getters }) => {
+      commit('RESET_INIT_PIE')
     }
   }
 }

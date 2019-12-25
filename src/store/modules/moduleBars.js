@@ -16,7 +16,8 @@ const moduleBars = {
 
   mutations: {
     SET_RECIEVED_DATA (state, data) {
-      Vue.set(state, 'recievedData', data)
+      // Vue.set(state, 'recievedData', data)
+      state.recievedData = [ ...data ]
     },
     SET_INIT (state) {
       Vue.set(state, 'init', true)

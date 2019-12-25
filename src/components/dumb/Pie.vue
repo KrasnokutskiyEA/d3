@@ -32,7 +32,7 @@ export default {
     },
 
     // генератор углов
-    pie () {
+    pieGenerator () {
       return pie().sort(null).value(d => d.cost)
     },
 
@@ -40,7 +40,7 @@ export default {
     arcPath () {
       return arc()
         .outerRadius(this.dims.radius)
-        .innerRadius(this.dims.raduis / 2)
+        .innerRadius(this.dims.radius / 2)
     }
 
     // шкала по оси - х
@@ -68,9 +68,9 @@ export default {
   },
 
   watch: {
-    // input (newVal, oldVal) {
-    //   this.updateBars(this.input)
-    // }
+    input (newVal, oldVal) {
+      return this.updatePie(newVal)
+    }
   },
 
   mounted () {
@@ -91,17 +91,16 @@ export default {
     // },
 
     drawPie () {
-      const svg = select('.canvas').append('svg')
+      const svg = select('.canvasPie').append('svg')
         .attr('width', this.dims.width + 150)
         .attr('height', this.dims.height + 150)
 
-      const graph = svg.append('g')
+      svg.append('g')
         // .attr('class', 'graph')
         // .attr('width', this.graphWidth)
         // .attr('height', this.graphHeight)
         .attr('transform', `translate(${this.cent.x}, ${this.cent.y})`)
-
-      console.log(graph)
+        .attr('class', 'graphPie')
 
       //   // draw xAxisGroup
       //   graph.append('g')
@@ -114,6 +113,17 @@ export default {
     },
 
     updatePie (data) {
+      // join enchanced pie data to path elements
+      const paths = select('.graphPie').selectAll('path')
+        .data(this.pieGenerator(data))
+
+      paths.enter()
+        .append('path')
+        .attr('class', 'arc')
+        .attr('d', this.arcPath)
+        .attr('stroke', '#FFF')
+        .attr('stroke-width', 3)
+
       // 0 - define transition
       // const t = transition().duration(1500)
 
@@ -161,5 +171,5 @@ export default {
 </script>
 
 <template>
-  <div class='canvas' />
+  <div class='canvasPie' />
 </template>

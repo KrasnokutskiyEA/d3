@@ -2,6 +2,9 @@
 import { mapActions, mapGetters } from 'vuex'
 import Form from './dumb/Form.vue'
 import Pie from './dumb/Pie.vue'
+import db from '../main.js'
+
+let unsubscribe
 
 export default {
   name: 'PieChart',
@@ -19,25 +22,28 @@ export default {
   },
 
   created () {
-    this.getDataPie()
+    unsubscribe = db.collection('expenses').onSnapshot(res => this.getDataPie(res))
+  },
+
+  destroyed () {
+    unsubscribe()
   },
 
   methods: {
     ...mapActions([
       'addItem',
-      'getDataPie'
+      'getDataPie',
+      'resetInitPie'
     ])
   }
 }
 </script>
 
 <template>
-  <div>
+  <div class='pieview'>
     <div v-if='!initPie'>Initializing PIE...</div>
-    <div class='pieview'>
-      <Form @submit='addItem' />
-      <Pie :input='recievedDataPie' />
-    </div>
+    <Form v-if='initPie' @submit='addItem' />
+    <Pie v-if='initPie' :input='recievedDataPie' />
   </div>
 </template>
 
