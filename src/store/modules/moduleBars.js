@@ -1,35 +1,42 @@
 /* eslint no-unused-vars: ["error", { "args": "none" }] */
 /* eslint no-unused-expressions: ["error", { "allowShortCircuit": true, "allowTernary": true }] */
 import Vue from 'vue'
-import { getData } from '../../helpers/helpersBars.js'
+import { getDataBars } from '../../helpers/helpersBars.js'
 
 const moduleBars = {
   state: {
-    recievedData: [],
-    init: false
+    recievedDataBars: [],
+    initBars: false
   },
 
   getters: {
-    recievedData: (state) => state.recievedData,
-    init: (state) => state.init
+    recievedDataBars: (state) => state.recievedDataBars,
+    initBars: (state) => state.initBars
   },
 
   mutations: {
-    SET_RECIEVED_DATA (state, data) {
-      // Vue.set(state, 'recievedData', data)
-      state.recievedData = [ ...data ]
+    ADD_BARS_DATA (state, doc) {
+      !state.recievedDataBars.some(i => i.id === doc.id) &&
+      state.recievedDataBars.push(doc)
     },
-    SET_INIT (state) {
-      Vue.set(state, 'init', true)
+
+    MODIFY_BARS_DATA (state, doc) {
+      const i = state.recievedDataBars.findIndex(i => i.id === doc.id)
+      Vue.set(state.recievedDataBars, i, doc)
+    },
+
+    REMOVE_BARS_DATA (state, doc) {
+      state.recievedDataBars = state.recievedDataBars.filter(i => i.id !== doc.id)
+    },
+
+    SET_INIT_BARS (state) {
+      Vue.set(state, 'initBars', true)
     }
   },
 
   actions: {
-    getData: async ({ commit, getters }) => {
-      await getData()
-    },
-    setInit: ({ commit, getters }) => {
-      commit('SET_INIT')
+    getDataBars: async ({ commit, getters }, res) => {
+      await getDataBars(res)
     }
   }
 }

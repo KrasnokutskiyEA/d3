@@ -21,29 +21,24 @@ export function addItem ([itemName, itemCost]) {
  * @param {number} - myParam
  */
 export function getDataPie (res) {
-  // get data from firestore, onSnapshot - changes listener
-  let fdata = []
-
-  console.log('-------on snapshot--------------')
   return res.docChanges().forEach(change => {
     const doc = { ...change.doc.data(), id: change.doc.id }
 
     // forming data array
     switch (change.type) {
       case 'added':
-        fdata.push(doc)
+        store.commit('ADD_PIE_DATA', doc)
         break
       case 'modified':
-        const i = fdata.findIndex(i => i.id === doc.id)
-        fdata[i] = doc
+        store.commit('MODIFY_PIE_DATA', doc)
         break
       case 'removed':
-        fdata = fdata.filter(i => i.id !== doc.id)
+        store.commit('REMOVE_PIE_DATA', doc)
         break
       default:
         break
     }
-    store.commit('SET_RECIEVED_DATA_PIE', fdata)
+
     !store.getters.initPie && store.commit('SET_INIT_PIE')
   })
 }

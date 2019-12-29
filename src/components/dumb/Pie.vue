@@ -1,16 +1,5 @@
 <script>
-import {
-  select,
-  pie,
-  arc
-// scaleLinear,
-// scaleBand,
-// max,
-// axisBottom,
-// axisLeft,
-// transition,
-// interpolate
-} from 'd3'
+import * as d3 from 'd3'
 
 export default {
   name: 'Pie',
@@ -31,40 +20,21 @@ export default {
       return { x: this.dims.width / 2 + 5, y: this.dims.height / 2 + 5 }
     },
 
-    // генератор углов
+    // генератор углов pie() - в радианах
     pieGenerator () {
-      return pie().sort(null).value(d => d.cost)
+      return d3.pie().sort(null).value(d => d.cost)
     },
 
-    // генератор секции
+    // генератор секции arc() ренерирует path, зная углы рассчитанные pie()
     arcPath () {
-      return arc()
+      return d3.arc()
         .outerRadius(this.dims.radius)
         .innerRadius(this.dims.radius / 2)
+    },
+
+    color () {
+      return d3.scaleOrdinal(d3['schemeSet3'])
     }
-
-    // шкала по оси - х
-    // x () {
-    //   return scaleBand()
-    //     .range([0, 500])
-    //     .paddingInner(0.2) // паддинги отделяют бары друг от друга
-    //     .paddingOuter(0.2)
-    // },
-
-    // ось - х
-    // xAxis () {
-    //   return axisBottom(this.x)
-    // },
-
-    // шкала по оси - у
-    // y () {
-    //   return scaleLinear().range([this.graphHeight, 0]) // выход
-    // },
-
-    // ось - y
-    // yAxis () {
-    //   return axisLeft(this.y).ticks(3).tickFormat(d => d + ' orders')
-    // }
   },
 
   watch: {
@@ -79,42 +49,22 @@ export default {
   },
 
   methods: {
-    // widthTween (d) {
-    //   // define interpolation
-    //   // d3 interpolate returns a function which we call - i
-    //   let i = interpolate(0, this.x.bandwidth())
-    //   // return a function which takes in a time ticker - t
-    //   return function (t) {
-    //     // return the value from passing thr ticker into interpolation
-    //     return i(t)
-    //   }
-    // },
-
     drawPie () {
-      const svg = select('.canvasPie').append('svg')
+      const svg = d3.select('.canvasPie').append('svg')
         .attr('width', this.dims.width + 150)
         .attr('height', this.dims.height + 150)
 
       svg.append('g')
-        // .attr('class', 'graph')
-        // .attr('width', this.graphWidth)
-        // .attr('height', this.graphHeight)
         .attr('transform', `translate(${this.cent.x}, ${this.cent.y})`)
         .attr('class', 'graphPie')
-
-      //   // draw xAxisGroup
-      //   graph.append('g')
-      //     .attr('class', 'xAxisGroup')
-      //     .attr('transform', `translate(0, ${this.graphHeight})`)
-
-      //   // draw yAxisGroup
-      //   graph.append('g')
-      //     .attr('class', 'yAxisGroup')
     },
 
     updatePie (data) {
+      // update color scale domain
+      this.color.domain(data.map(d => d.name))
+
       // join enchanced pie data to path elements
-      const paths = select('.graphPie').selectAll('path')
+      const paths = d3.select('.graphPie').selectAll('path')
         .data(this.pieGenerator(data))
 
       paths.enter()
@@ -123,6 +73,7 @@ export default {
         .attr('d', this.arcPath)
         .attr('stroke', '#FFF')
         .attr('stroke-width', 3)
+        .attr('fill', d => this.color(d.data.name))
 
       // 0 - define transition
       // const t = transition().duration(1500)

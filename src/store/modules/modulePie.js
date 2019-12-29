@@ -15,17 +15,22 @@ const modulePie = {
   },
 
   mutations: {
-    SET_RECIEVED_DATA_PIE (state, data) {
-      Vue.set(state, 'recievedDataPie', data)
-      // state.recievedDataPie = [ ...data ]
-    },
-    SET_INIT_PIE (state) {
-      Vue.set(state, 'initPie', true)
+    ADD_PIE_DATA (state, doc) {
+      !state.recievedDataPie.some(i => i.id === doc.id) &&
+      state.recievedDataPie.push(doc)
     },
 
-    RESET_INIT_PIE (state) {
-      Vue.set(state, 'initPie', false)
-      state.recievedDataPie = []
+    MODIFY_PIE_DATA (state, doc) {
+      const i = state.recievedDataPie.findIndex(i => i.id === doc.id)
+      Vue.set(state.recievedDataPie, i, doc)
+    },
+
+    REMOVE_PIE_DATA (state, doc) {
+      state.recievedDataPie = state.recievedDataPie.filter(i => i.id !== doc.id)
+    },
+
+    SET_INIT_PIE (state) {
+      Vue.set(state, 'initPie', true)
     }
   },
 
@@ -35,12 +40,6 @@ const modulePie = {
     },
     getDataPie: ({ commit, getters }, res) => {
       return getDataPie(res)
-    },
-    setInitPie: ({ commit, getters }) => {
-      commit('SET_INIT_PIE')
-    },
-    resetInitPie: ({ commit, getters }) => {
-      commit('RESET_INIT_PIE')
     }
   }
 }

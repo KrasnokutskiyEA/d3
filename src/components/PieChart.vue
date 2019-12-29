@@ -32,8 +32,7 @@ export default {
   methods: {
     ...mapActions([
       'addItem',
-      'getDataPie',
-      'resetInitPie'
+      'getDataPie'
     ])
   }
 }

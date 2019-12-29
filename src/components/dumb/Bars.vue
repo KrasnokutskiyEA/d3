@@ -1,14 +1,5 @@
 <script>
-import {
-  select,
-  scaleLinear,
-  scaleBand,
-  max,
-  axisBottom,
-  axisLeft,
-  transition,
-  interpolate
-} from 'd3'
+import * as d3 from 'd3'
 
 export default {
   name: 'Bars',
@@ -36,7 +27,7 @@ export default {
 
     // шкала по оси - х
     x () {
-      return scaleBand()
+      return d3.scaleBand()
         .range([0, 500])
         .paddingInner(0.2) // паддинги отделяют бары друг от друга
         .paddingOuter(0.2)
@@ -44,17 +35,17 @@ export default {
 
     // ось - х
     xAxis () {
-      return axisBottom(this.x)
+      return d3.axisBottom(this.x)
     },
 
     // шкала по оси - у
     y () {
-      return scaleLinear().range([this.graphHeight, 0]) // выход
+      return d3.scaleLinear().range([this.graphHeight, 0]) // выход
     },
 
     // ось - y
     yAxis () {
-      return axisLeft(this.y).ticks(3).tickFormat(d => d + ' orders')
+      return d3.axisLeft(this.y).ticks(3).tickFormat(d => d + ' orders')
     }
   },
 
@@ -73,7 +64,7 @@ export default {
     widthTween (d) {
       // define interpolation
       // d3 interpolate returns a function which we call - i
-      let i = interpolate(0, this.x.bandwidth())
+      let i = d3.interpolate(0, this.x.bandwidth())
       // return a function which takes in a time ticker - t
       return function (t) {
         // return the value from passing thr ticker into interpolation
@@ -82,7 +73,7 @@ export default {
     },
 
     drawBars () {
-      const svg = select('.canvas').append('svg')
+      const svg = d3.select('.canvas').append('svg')
         .attr('width', 600)
         .attr('height', 600)
 
@@ -104,14 +95,14 @@ export default {
 
     updateBars (data) {
       // 0 - define transition
-      const t = transition().duration(1500)
+      const t = d3.transition().duration(1500)
 
       // 1 - updating scale domains
-      this.y.domain([0, max(this.input, d => d.orders)]) // что подаем на вход
+      this.y.domain([0, d3.max(this.input, d => d.orders)]) // что подаем на вход
       this.x.domain(this.input.map(item => item.name)) // что подаем на вход
 
       // 2 - Join data to DOM elements
-      const rects = select('.graph').selectAll('rect').data(this.input)
+      const rects = d3.select('.graph').selectAll('rect').data(this.input)
 
       // 3 - remove exit selection
       rects.exit().remove()
@@ -136,11 +127,11 @@ export default {
         .attr('height', d => this.graphHeight - this.y(d.orders))
 
       // call axes
-      select('.xAxisGroup').call(this.xAxis)
-      select('.yAxisGroup').call(this.yAxis)
+      d3.select('.xAxisGroup').call(this.xAxis)
+      d3.select('.yAxisGroup').call(this.yAxis)
 
       // styling axes
-      select('.xAxisGroup').selectAll('text')
+      d3.select('.xAxisGroup').selectAll('text')
         .attr('transform', 'rotate(-40)')
         .attr('text-anchor', 'end')
         .attr('fill', 'orange')
