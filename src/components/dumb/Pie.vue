@@ -60,13 +60,20 @@ export default {
     },
 
     updatePie (data) {
-      // update color scale domain
+      // 0 - update color scale domain
       this.color.domain(data.map(d => d.name))
 
-      // join enchanced pie data to path elements
+      // 1 - join data data to DOM elements
       const paths = d3.select('.graphPie').selectAll('path')
         .data(this.pieGenerator(data))
 
+      // 2 - remove exit selection
+      paths.exit().remove()
+
+      // 3 - update current shapes in DOM
+      paths.attr('d', this.arcPath)
+
+      // 4 - append enter selection to the DOM
       paths.enter()
         .append('path')
         .attr('class', 'arc')
@@ -74,48 +81,6 @@ export default {
         .attr('stroke', '#FFF')
         .attr('stroke-width', 3)
         .attr('fill', d => this.color(d.data.name))
-
-      // 0 - define transition
-      // const t = transition().duration(1500)
-
-      //   // 1 - updating scale domains
-      //   this.y.domain([0, max(this.input, d => d.orders)]) // что подаем на вход
-      //   this.x.domain(this.input.map(item => item.name)) // что подаем на вход
-
-      //   // 2 - Join data to DOM elements
-      //   const rects = select('.graph').selectAll('rect').data(this.input)
-
-      //   // 3 - remove exit selection
-      //   rects.exit().remove()
-
-      //   // 4 - update current shapes in DOM
-      //   rects
-      //     .attr('width', this.x.bandwidth)
-      //     .attr('fill', d => 'orange')
-      //     .attr('x', d => this.x(d.name))
-
-      //   // 5 - append enter selection to the DOM
-      //   rects.enter().append('rect')
-      //     .attr('width', this.x.bandwidth)
-      //     .attr('height', 0)
-      //     .attr('fill', d => 'orange')
-      //     .attr('x', d => this.x(d.name))
-      //     .attr('y', this.graphHeight)
-      //     .merge(rects)
-      //     .transition(t)
-      //     .attrTween('width', this.widthTween)
-      //     .attr('y', d => this.y(d.orders))
-      //     .attr('height', d => this.graphHeight - this.y(d.orders))
-
-      //   // call axes
-      //   select('.xAxisGroup').call(this.xAxis)
-      //   select('.yAxisGroup').call(this.yAxis)
-
-      //   // styling axes
-      //   select('.xAxisGroup').selectAll('text')
-      //     .attr('transform', 'rotate(-40)')
-      //     .attr('text-anchor', 'end')
-      //     .attr('fill', 'orange')
     }
   }
 }
