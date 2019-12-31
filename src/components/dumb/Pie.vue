@@ -10,7 +10,8 @@ export default {
 
   data () {
     return {
-      dims: { height: 300, width: 300, radius: 150 } // размеры
+      dims: { height: 300, width: 300, radius: 150 }, // размеры
+      current: []
     }
   },
 
@@ -49,6 +50,44 @@ export default {
   },
 
   methods: {
+    arcTweenEnter (d) {
+      // define result
+      const result = (d) => this.arcPath(d)
+      // define interpolation
+      // d3 interpolate returns a function which we call - i
+      let i = d3.interpolate(d.endAngle, d.startAngle)
+      // return a function which takes in a time ticker - t
+      return function (t) {
+        d.startAngle = i(t) // eslint-disable-line no-param-reassign
+        return result(d)
+      }
+    },
+
+    arcTweenExit (d) {
+      const result = (d) => this.arcPath(d)
+      let i = d3.interpolate(d.startAngle, d.endAngle)
+
+      return function (t) {
+        d.startAngle = i(t) // eslint-disable-line no-param-reassign
+        return result(d)
+      }
+    },
+
+    arcTweenUpdate (d) {
+      let _this = this
+      const current = this.current.find(el => el.index === d.index)
+
+      // interpolate between two objects
+      let i = d3.interpolate(current, d)
+
+      // update (this.current) with new updated data
+      this.current[d.index] = d
+
+      return function (t) {
+        return _this.arcPath(i(t))
+      }
+    },
+
     drawPie () {
       const svg = d3.select('.canvasPie').append('svg')
         .attr('width', this.dims.width + 150)
@@ -68,19 +107,25 @@ export default {
         .data(this.pieGenerator(data))
 
       // 2 - remove exit selection
-      paths.exit().remove()
+      paths
+        .exit()
+        .transition().duration(2750).attrTween('d', this.arcTweenExit)
+        .remove()
 
       // 3 - update current shapes in DOM
-      paths.attr('d', this.arcPath)
+      paths
+        .attr('d', this.arcPath)
+        .transition().duration(2750).attrTween('d', this.arcTweenUpdate)
 
       // 4 - append enter selection to the DOM
       paths.enter()
         .append('path')
         .attr('class', 'arc')
-        .attr('d', this.arcPath)
         .attr('stroke', '#FFF')
         .attr('stroke-width', 3)
         .attr('fill', d => this.color(d.data.name))
+        .each(d => this.current.push(d))
+        .transition().duration(2750).attrTween('d', this.arcTweenEnter)
     }
   }
 }
