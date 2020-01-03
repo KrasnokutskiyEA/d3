@@ -138,8 +138,6 @@ export default {
         .attr('transform', `translate(${this.cent.x}, ${this.cent.y})`)
         .attr('class', 'graphPie')
 
-      d3.select('.graphPie').selectAll('path')
-
       // отрисовка легенды
       svg.append('g')
         .attr('transform', `translate(${this.dims.width + 40}, 10)`)
