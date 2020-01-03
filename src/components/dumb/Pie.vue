@@ -1,6 +1,7 @@
 <script>
 import * as d3 from 'd3'
 import { legendColor } from 'd3-svg-legend'
+import d3Tip from 'd3-tip'
 
 export default {
   name: 'Pie',
@@ -45,6 +46,18 @@ export default {
         .shape('circle')
         .shapePadding(10)
         .scale(this.color)
+    },
+
+    // настройка подсказки
+    tip () {
+      return d3Tip()
+        .attr('class', 'tip')
+        .html(d => {
+          let content = `<div class='name'>${d.data.name}</div>`
+          content += `<div class='cost'>${d.data.cost}</div>`
+          content += `<div class='delete'>Click slice to delete</div>`
+          return content
+        })
     }
 
   },
@@ -125,6 +138,8 @@ export default {
         .attr('transform', `translate(${this.cent.x}, ${this.cent.y})`)
         .attr('class', 'graphPie')
 
+      d3.select('.graphPie').selectAll('path')
+
       // отрисовка легенды
       svg.append('g')
         .attr('transform', `translate(${this.dims.width + 40}, 10)`)
@@ -167,10 +182,19 @@ export default {
         .transition().duration(300).attrTween('d', this.arcTweenEnter)
 
       // 5 - add events
-      d3.select('.graphPie').selectAll('path')
-        .on('mouseover', this.handleMouseOver)
-        .on('mouseout', this.handleMouseOut)
+      const section = d3.select('.graphPie').selectAll('path')
+        .on('mouseover', (d, i, n) => {
+          this.tip.show(d, n[i])
+          this.handleMouseOver(d, i, n)
+        })
+        .on('mouseout', (d, i, n) => {
+          this.tip.hide()
+          this.handleMouseOut(d, i, n)
+        })
         .on('click', this.handleClick)
+
+      // 6 - call tip
+      section.call(this.tip)
     }
   }
 }
@@ -179,3 +203,15 @@ export default {
 <template>
   <div class='canvasPie' />
 </template>
+
+<style lang='scss'>
+.tip {
+  padding: 10px;
+  background: #333;
+  color: #fff;
+  .delete {
+    color: red;
+    font-size: 0.8em;
+  }
+}
+</style>
