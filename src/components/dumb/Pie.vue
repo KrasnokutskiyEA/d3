@@ -1,5 +1,6 @@
 <script>
 import * as d3 from 'd3'
+import { legendColor } from 'd3-svg-legend'
 
 export default {
   name: 'Pie',
@@ -33,9 +34,19 @@ export default {
         .innerRadius(this.dims.radius / 2)
     },
 
+    // генератор цветов
     color () {
       return d3.scaleOrdinal(d3['schemeSet3'])
+    },
+
+    // настройка легенды
+    legend () {
+      return legendColor()
+        .shape('circle')
+        .shapePadding(10)
+        .scale(this.color)
     }
+
   },
 
   watch: {
@@ -88,6 +99,23 @@ export default {
       }
     },
 
+    // event handlers
+    handleMouseOver (d, i, n) {
+      return d3.select(n[i])
+        .transition('changeSliceFill').duration(300)
+        .attr('fill', '#660033')
+    },
+
+    handleMouseOut (d, i, n) {
+      return d3.select(n[i])
+        .transition('changeSliceFill').duration(300)
+        .attr('fill', this.color(d.data.name))
+    },
+
+    handleClick (d) {
+      return this.$emit('delete', d.data.id)
+    },
+
     drawPie () {
       const svg = d3.select('.canvasPie').append('svg')
         .attr('width', this.dims.width + 150)
@@ -96,11 +124,22 @@ export default {
       svg.append('g')
         .attr('transform', `translate(${this.cent.x}, ${this.cent.y})`)
         .attr('class', 'graphPie')
+
+      // отрисовка легенды
+      svg.append('g')
+        .attr('transform', `translate(${this.dims.width + 40}, 10)`)
+        .attr('class', 'legendGroup')
     },
 
     updatePie (data) {
       // 0 - update color scale domain
       this.color.domain(data.map(d => d.name))
+
+      // 0.1 - update and call legend
+      const legendGroup = d3.select('.legendGroup').call(this.legend)
+
+      legendGroup.selectAll('text')
+        .attr('fill', '#660033')
 
       // 1 - join data data to DOM elements
       const paths = d3.select('.graphPie').selectAll('path')
@@ -109,13 +148,13 @@ export default {
       // 2 - remove exit selection
       paths
         .exit()
-        .transition().duration(2750).attrTween('d', this.arcTweenExit)
+        .transition().duration(300).attrTween('d', this.arcTweenExit)
         .remove()
 
       // 3 - update current shapes in DOM
       paths
         .attr('d', this.arcPath)
-        .transition().duration(2750).attrTween('d', this.arcTweenUpdate)
+        .transition().duration(300).attrTween('d', this.arcTweenUpdate)
 
       // 4 - append enter selection to the DOM
       paths.enter()
@@ -125,7 +164,13 @@ export default {
         .attr('stroke-width', 3)
         .attr('fill', d => this.color(d.data.name))
         .each(d => this.current.push(d))
-        .transition().duration(2750).attrTween('d', this.arcTweenEnter)
+        .transition().duration(300).attrTween('d', this.arcTweenEnter)
+
+      // 5 - add events
+      d3.select('.graphPie').selectAll('path')
+        .on('mouseover', this.handleMouseOver)
+        .on('mouseout', this.handleMouseOut)
+        .on('click', this.handleClick)
     }
   }
 }

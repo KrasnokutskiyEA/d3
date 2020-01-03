@@ -1,7 +1,7 @@
 /* eslint no-unused-vars: ["error", { "args": "none" }] */
 /* eslint no-unused-expressions: ["error", { "allowShortCircuit": true, "allowTernary": true }] */
 import Vue from 'vue'
-import { addItem, getDataPie } from '../../helpers/helpersPie.js'
+import { addItem, getDataPie, deleteSection } from '../../helpers/helpersPie.js'
 
 const modulePie = {
   state: {
@@ -40,6 +40,9 @@ const modulePie = {
     },
     getDataPie: ({ commit, getters }, res) => {
       return getDataPie(res)
+    },
+    deleteSection: ({ commit, getters }, id) => {
+      return deleteSection(id)
     }
   }
 }

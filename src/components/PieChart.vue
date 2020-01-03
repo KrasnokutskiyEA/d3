@@ -32,7 +32,8 @@ export default {
   methods: {
     ...mapActions([
       'addItem',
-      'getDataPie'
+      'getDataPie',
+      'deleteSection'
     ])
   }
 }
@@ -42,7 +43,11 @@ export default {
   <div class='pieview'>
     <div v-if='!initPie'>Initializing PIE...</div>
     <Form v-if='initPie' @submit='addItem' />
-    <Pie v-if='initPie' :input='recievedDataPie' />
+    <Pie
+      v-if='initPie'
+      :input='recievedDataPie'
+      @delete='deleteSection'
+    />
   </div>
 </template>
 

@@ -42,3 +42,12 @@ export function getDataPie (res) {
     !store.getters.initPie && store.commit('SET_INIT_PIE')
   })
 }
+
+/**
+ * функция удаления данных для pieChart
+ * @function
+ * @param {number} - myParam
+ */
+export function deleteSection (id) {
+  return db.collection('expenses').doc(id).delete()
+}
