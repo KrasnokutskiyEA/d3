@@ -21,6 +21,11 @@ const router = new VueRouter({
       path: '/pie',
       name: 'pie',
       component: () => import('../components/PieChart.vue')
+    },
+    {
+      path: '/graph',
+      name: 'graph',
+      component: () => import('../components/GraphChart.vue')
     }
   ]
 })

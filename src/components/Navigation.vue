@@ -10,7 +10,8 @@ export default {
       items: [
         { title: 'Hello', icon: 'build', addr: 'home' },
         { title: 'Bars', icon: 'build', addr: 'bars' },
-        { title: 'Pie', icon: 'build', addr: 'pie' }
+        { title: 'Pie', icon: 'build', addr: 'pie' },
+        { title: 'Graph', icon: 'build', addr: 'graph' }
       ]
     }
   },
