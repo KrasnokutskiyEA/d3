@@ -109,8 +109,8 @@ export default {
 
       // 4 - update current shapes in DOM
       rects
-        .attr('width', this.x.bandwidth)
-        .attr('fill', d => 'orange')
+        .attr('width', this.x.bandwidth) // ? dont need probably !
+        .attr('fill', d => 'orange') // ? dont need probably !
         .attr('x', d => this.x(d.name))
 
       // 5 - append enter selection to the DOM
@@ -126,11 +126,11 @@ export default {
         .attr('y', d => this.y(d.orders))
         .attr('height', d => this.graphHeight - this.y(d.orders))
 
-      // call axes
+      // 6 - call axes
       d3.select('.xAxisGroup').call(this.xAxis)
       d3.select('.yAxisGroup').call(this.yAxis)
 
-      // styling axes
+      // 7 - styling axes
       d3.select('.xAxisGroup').selectAll('text')
         .attr('transform', 'rotate(-40)')
         .attr('text-anchor', 'end')
