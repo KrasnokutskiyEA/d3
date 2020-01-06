@@ -27,7 +27,9 @@ export default {
     ]),
 
     recievedDataGraphFiltered () {
-      return this.recievedDataGraph.filter(o => o.activityType === this.activity)
+      return this.recievedDataGraph
+        .filter(o => o.activityType === this.activity)
+        .sort((a, b) => new Date(a.date) - new Date(b.date))
     }
   },
 
