@@ -14,11 +14,21 @@ export default {
     Graph
   },
 
+  data () {
+    return {
+      activity: 'Cycling'
+    }
+  },
+
   computed: {
     ...mapGetters([
       'recievedDataGraph',
       'initGraph'
-    ])
+    ]),
+
+    recievedDataGraphFiltered () {
+      return this.recievedDataGraph.filter(o => o.activityType === this.activity)
+    }
   },
 
   created () {
@@ -33,7 +43,11 @@ export default {
     ...mapActions([
       'addItemGraph',
       'getDataGraph'
-    ])
+    ]),
+
+    activitySelected (activity) {
+      return this.$set(this, 'activity', activity)
+    }
   }
 }
 </script>
@@ -41,8 +55,12 @@ export default {
 <template>
   <div class='graphview'>
     <div v-if='!initGraph'>Initializing Graph...</div>
-    <FormGraph v-if='initGraph' @submit='addItemGraph' />
-    <Graph v-if='initGraph' :input='recievedDataGraph' />
+    <FormGraph
+      v-if='initGraph'
+      @activitySelected='activitySelected'
+      @submit='addItemGraph'
+    />
+    <Graph v-if='initGraph' :input='recievedDataGraphFiltered' />
   </div>
 </template>
 

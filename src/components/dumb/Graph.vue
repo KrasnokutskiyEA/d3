@@ -32,7 +32,7 @@ export default {
     // ось - х
     xAxis () {
       return d3.axisBottom(this.x)
-        .ticks(4)
+        .ticks(5)
         .tickFormat(d3.timeFormat('%b %d')) // month + date
     },
 
@@ -44,7 +44,7 @@ export default {
     // ось - y
     yAxis () {
       return d3.axisLeft(this.y)
-        .ticks(4)
+        .ticks(5)
         .tickFormat(d => d + 'm') // m - meters
     }
   },

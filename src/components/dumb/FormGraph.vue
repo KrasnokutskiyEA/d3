@@ -16,18 +16,22 @@ export default {
     },
 
     cycling () {
+      this.$emit('activitySelected', 'Cycling')
       return this.$set(this, 'activityType', 'Cycling')
     },
 
     running () {
+      this.$emit('activitySelected', 'Running')
       return this.$set(this, 'activityType', 'Running')
     },
 
     swimming () {
+      this.$emit('activitySelected', 'Swimming')
       return this.$set(this, 'activityType', 'Swimming')
     },
 
     walking () {
+      this.$emit('activitySelected', 'Walking')
       return this.$set(this, 'activityType', 'Walking')
     }
   }
