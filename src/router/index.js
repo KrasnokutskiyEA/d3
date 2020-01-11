@@ -26,6 +26,11 @@ const router = new VueRouter({
       path: '/graph',
       name: 'graph',
       component: () => import('../components/GraphChart.vue')
+    },
+    {
+      path: '/circles',
+      name: 'circles',
+      component: () => import('../components/CirclesChart.vue')
     }
   ]
 })
