@@ -1,5 +1,5 @@
 <script>
-// import * as d3 from 'd3'
+import * as d3 from 'd3'
 
 export default {
   name: 'Tree',
@@ -10,86 +10,103 @@ export default {
 
   data () {
     return {
-      // margin: { top: 40, right: 20, bottom: 50, left: 100 }, // margins
-      // current: []
+      dims: { height: 500, width: 1100 } // dimensions
     }
   },
 
   computed: {
-    // graphWidth () {
-    //   return 560 - this.margin.left - this.margin.right
-    // },
+    // data stratify
+    stratify () {
+      return d3.stratify()
+        .id(d => d.name)
+        .parentId(d => d.parent)
+    },
 
-    // graphHeight () {
-    //   return 400 - this.margin.top - this.margin.bottom
-    // }
+    rootNode () {
+      return this.stratify(this.input)
+    },
+
+    // tree generator
+    tree () {
+      return d3.tree().size([this.dims.width, this.dims.height])
+    },
+
+    // finally prepared data with xoords
+    preparedData () {
+      return this.tree(this.rootNode)
+    }
   },
 
   watch: {
     input (newVal, oldVal) {
-      return this.updateGraph(newVal)
+      return this.updateTree(newVal)
     }
   },
 
   mounted () {
-    this.drawGraph()
-    this.updateGraph(this.input)
+    this.drawTree()
+    this.updateTree(this.input)
   },
 
   methods: {
-    drawGraph () {
-      // const svg = d3.select('.canvasGraph').append('svg')
-      //   .attr('width', this.graphWidth + this.margin.left + this.margin.right)
-      //   .attr('height', this.graphHeight + this.margin.top + this.margin.bottom)
+    drawTree () {
+      const svg = d3.select('.canvasTree').append('svg')
+        .attr('width', this.dims.width + 100)
+        .attr('height', this.dims.height + 100)
 
-      // const graph = svg.append('g')
-      //   .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`)
-      //   .attr('width', this.graphWidth)
-      //   .attr('height', this.graphHeight)
-      //   .attr('class', 'graphGraph')
+      svg.append('g')
+        .attr('transform', `translate(50, 50)`)
+        .attr('class', 'graphTree')
     },
 
-    updateGraph (data) {
-      // 1 - updating scale domains
-      // this.x.domain(d3.extent(this.input, d => new Date(d.date))) // что подаем на вход
-      // this.y.domain([0, d3.max(this.input, d => d.distance)]) // что подаем на вход
+    updateTree (data) {
+      // 1 - remove nodes
+      d3.select('.graphTree').selectAll('.node').remove()
+      d3.select('.graphTree').selectAll('.link').remove()
 
-      // update path data (lines between points)
-      // d3.select('.graphLine').data([this.input])
-      //   .attr('fill', 'none')
-      //   .attr('stroke', '#00bfa5')
-      //   .attr('stroke-width', 2)
-      //   .attr('d', this.line)
+      // get link selection and join data
+      const links = d3.select('.graphTree').selectAll('.link').data(this.preparedData.links())
 
-      // 2- Join data to DOM elements - (create circles for objects)
-      // const circles = d3.select('.graphGraph').selectAll('circle').data(this.input)
+      // 2- Join data to DOM elements - (create nodes for objects)
+      const nodes = d3.select('.graphTree').selectAll('.node').data(this.preparedData.descendants())
 
-      // 3 - remove exit selection
-      // circles.exit().remove()
+      // 5.1 - append enter selection to the DOM - (add new links)
+      links.enter().append('path')
+        .attr('class', 'link')
+        .attr('fill', 'none')
+        .attr('stroke', '#aaa')
+        .attr('stroke-width', 2)
+        .attr('d', d3.linkVertical().x(d => d.x).y(d => d.y))
 
-      // 4 - update current shapes in DOM
-      // circles
-      //   .attr('cx', d => this.x(new Date(d.date)))
-      //   .attr('cy', d => this.y(d.distance))
+      // 5.2 - append enter selection to the DOM - (add new tree nodes)
+      const enterNodes = nodes.enter().append('g')
+        .attr('class', 'node')
+        .attr('transform', d => `translate(${d.x}, ${d.y})`)
 
-      // 5 - append enter selection to the DOM - (add new points-circles)
-      // circles.enter().append('circle')
-      //   .attr('r', 4)
-      //   .attr('cx', d => this.x(new Date(d.date)))
-      //   .attr('cy', d => this.y(d.distance))
-      //   .attr('fill', 'grey')
+      // 5.3 - append rects to enter nodes
+      enterNodes.append('rect')
+        .attr('fill', '#aaa')
+        .attr('stroke', '#555')
+        .attr('stroke-width', 2)
+        .attr('height', 50)
+        .attr('width', d => d.data.name.length * 20)
+        .attr('transform', d => {
+          let x = d.data.name.length * 10
+          return `translate(${-x}, -28)`
+        })
 
-      // add events
-      // d3.select('.graphGraph').selectAll('circle')
-      //   .on('mouseover', (d, i, n) => this.handleMouseOver(d, i, n))
-      //   .on('mouseleave', (d, i, n) => this.handleMouseOut(d, i, n))
+      // 5.4 - append name text
+      enterNodes.append('text')
+        .attr('text-anchor', 'middle')
+        .attr('fill', 'white')
+        .text(d => d.data.name)
     }
   }
 }
 </script>
 
 <template>
-  <div class='canvasTree'>Tree...</div>
+  <div class='canvasTree' />
 </template>
 
 <style lang='scss'>

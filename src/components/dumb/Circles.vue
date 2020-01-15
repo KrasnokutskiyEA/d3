@@ -15,6 +15,7 @@ export default {
   },
 
   computed: {
+    // data stratify
     stratify () {
       return d3.stratify()
         .id(d => d.name)
@@ -26,15 +27,14 @@ export default {
         .sum(d => d.amount)
     },
 
+    // circles diag generator
     pack () {
-      return d3.pack()
-        .size([960, 700])
-        .padding(5)
+      return d3.pack().size([960, 700]).padding(5)
     },
 
-    // finally prepared data
+    // finally prepared data with coords
     preparedData () {
-      return this.pack(this.rootNode).descendants()
+      return this.pack(this.rootNode).descendants() // descendants converts to plain arr
     },
 
     // create ordinal scale (in this case, depends on depth!)
