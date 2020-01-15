@@ -4,6 +4,7 @@ import moduleApp from './modules/moduleApp'
 import moduleBars from './modules/moduleBars'
 import modulePie from './modules/modulePie'
 import moduleGraph from './modules/moduleGraph'
+import moduleTree from './modules/moduleTree'
 
 Vue.use(Vuex)
 
@@ -12,6 +13,7 @@ export default new Vuex.Store({
     app: moduleApp,
     bars: moduleBars,
     pie: modulePie,
-    graph: moduleGraph
+    graph: moduleGraph,
+    tree: moduleTree
   }
 })

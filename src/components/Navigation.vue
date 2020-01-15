@@ -12,7 +12,8 @@ export default {
         { title: 'Bars', icon: 'build', addr: 'bars' },
         { title: 'Pie', icon: 'build', addr: 'pie' },
         { title: 'Graph', icon: 'build', addr: 'graph' },
-        { title: 'Circles', icon: 'build', addr: 'circles' }
+        { title: 'Circles', icon: 'build', addr: 'circles' },
+        { title: 'Tree', icon: 'build', addr: 'tree' }
       ]
     }
   },
