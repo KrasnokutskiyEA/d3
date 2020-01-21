@@ -34,6 +34,11 @@ export default {
     // finally prepared data with xoords
     preparedData () {
       return this.tree(this.rootNode)
+    },
+
+    // генератор цветов
+    color () {
+      return d3.scaleOrdinal(d3['schemeSet1'])
     }
   },
 
@@ -64,6 +69,9 @@ export default {
       d3.select('.graphTree').selectAll('.node').remove()
       d3.select('.graphTree').selectAll('.link').remove()
 
+      // 1.1 - update color scale domain
+      this.color.domain(data.map(d => d.department))
+
       // get link selection and join data
       const links = d3.select('.graphTree').selectAll('.link').data(this.preparedData.links())
 
@@ -85,7 +93,7 @@ export default {
 
       // 5.3 - append rects to enter nodes
       enterNodes.append('rect')
-        .attr('fill', '#aaa')
+        .attr('fill', d => this.color(d.data.department))
         .attr('stroke', '#555')
         .attr('stroke-width', 2)
         .attr('height', 50)
