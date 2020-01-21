@@ -36,7 +36,7 @@ export default {
       return this.tree(this.rootNode)
     },
 
-    // генератор цветов
+    // генератор цветов - здесь определяем range
     color () {
       return d3.scaleOrdinal(d3['schemeSet1'])
     }

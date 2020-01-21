@@ -35,7 +35,7 @@ export default {
         .innerRadius(this.dims.radius / 2)
     },
 
-    // генератор цветов
+    // генератор цветов - здесь определяем range
     color () {
       return d3.scaleOrdinal(d3['schemeSet3'])
     },
